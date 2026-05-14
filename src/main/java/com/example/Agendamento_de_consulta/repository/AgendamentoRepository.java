@@ -11,5 +11,5 @@ import com.example.Agendamento_de_consulta.entity.Medico;
 @Repository
 public interface AgendamentoRepository extends  JpaRepository<Agendamento, Long>{
     
-    List<Agendamento> findByMedicos(List<Medico> id);
+    List<Agendamento> findByMedicoIn(List<Medico> medicos);
 }
