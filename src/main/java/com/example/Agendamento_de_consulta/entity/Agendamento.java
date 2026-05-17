@@ -63,8 +63,7 @@ public class Agendamento {
     private String telefonePaciente; 
 
 
-
-
+    
     // CONVÊNIOS, PLANOS E OBSERVAÇÕES TANDO DE PACIENTES QUANTO DE PROCEDIMENTO
     @Column(name = "key_convenio_paciente")
     private String keyConvenioPaciente; 
@@ -77,6 +76,8 @@ public class Agendamento {
     
     @Column(name = "observacoes_procedimento_produto", length = 1000)
     private String observacoesProcedimentoProduto; 
+
+
 
     // ENUNS PARA AGENDAMENTO
     public enum StatusAgendamento {

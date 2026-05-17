@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class Especialidade {
     
+
+    // Colunas SOBRE A ESPECIALIDADE
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
