@@ -17,7 +17,8 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Relacionamentos (Chaves Estrangeiras)
+
+    // RELACIONAMENTOS
     @ManyToOne
     @JoinColumn(name = "medico_id", nullable = false)
     private Medico medico;
@@ -26,20 +27,62 @@ public class Agendamento {
     @JoinColumn(name = "paciente_id", nullable = false)
     private Paciente paciente;
 
-    // RF26: Data e hora do agendamento
-    private LocalDateTime dataHoraAgendamento;
+    @ManyToOne
+    @JoinColumn(name = "procedimento_id")
+    private Procedimento procedimento;
 
-    // RF26: Status (agendado, cancelado, confirmado)
+
+
+    // DADOS SOBRE MEDICO
+    @Column(name = "agenda_medico_id")
+    private Long agendaMedicoId;
+
+    @Column(name = "data_hora_agenda_medico")
+    private LocalDateTime dataHoraAgendaMedico;
+
+
+
+    // DADOS SOBRE AGENDAMENTO
+    @Column(name = "data_hora_agendamento", nullable = false)
+    private LocalDateTime dataHoraAgendamento; 
+
     @Enumerated(EnumType.STRING)
-    private StatusAgendamento statusAgendamento;
+    @Column(name = "status_agendamento", nullable = false)
+    private StatusAgendamento statusAgendamento; 
 
-    // Campos de convênio e procedimentos conforme sua modelagem
-    private String planoPaciente;
-    private String observacoesPaciente;
-    private String observacoesProcedimentoProduto;
 
-    // Enums para garantir os status fixos
+
+    // DADOS DO PACIENTE
+    @Column(name = "data_nascimento_paciente")
+    private LocalDateTime dataNascimentoPaciente; 
+    
+    @Column(name = "cpf_paciente")
+    private String cpfPaciente; 
+    
+    @Column(name = "telefone_paciente")
+    private String telefonePaciente; 
+
+
+
+
+    // CONVÊNIOS, PLANOS E OBSERVAÇÕES TANDO DE PACIENTES QUANTO DE PROCEDIMENTO
+    @Column(name = "key_convenio_paciente")
+    private String keyConvenioPaciente; 
+    
+    @Column(name = "plano_paciente")
+    private String planoPaciente; 
+    
+    @Column(name = "observacoes_paciente", length = 1000)
+    private String observacoesPaciente; 
+    
+    @Column(name = "observacoes_procedimento_produto", length = 1000)
+    private String observacoesProcedimentoProduto; 
+
+    // ENUNS PARA AGENDAMENTO
     public enum StatusAgendamento {
-        AGENDADO, CANCELADO, CONFIRMADO
+        AGENDADO, 
+        CANCELADO, 
+        CONFIRMADO
     }
+
 }
