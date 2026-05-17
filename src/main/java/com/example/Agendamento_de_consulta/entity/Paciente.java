@@ -28,6 +28,8 @@ public class Paciente {
     @Column(name = "nome_social", length = 150)
     private String nomeSocial;
 
+
+
     @NotBlank(message = "CPF é obrigatório")
     @Size(min = 11, max = 14, message = "O CPF deve ter entre 11 e 14 caracteres")
     @Column(nullable = false, unique = true, length = 14)
@@ -44,6 +46,8 @@ public class Paciente {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
+
+
     @Size(max = 20, message = "O RG não pode ter mais de 20 caracteres")
     @Column(length = 20)
     private String rg; 
@@ -54,6 +58,8 @@ public class Paciente {
 
     private Double peso;
     private Double altura;
+
+
 
     @Size(max = 150, message = "O nome da mãe não pode ter mais de 150 caracteres")
     @Column(name = "nome_mae", length = 150)
@@ -69,6 +75,8 @@ public class Paciente {
     @Column(nullable = false, length = 200)
     private String endereco;
 
+
+
     @Size(max = 100, message = "O complemento não pode ter mais de 100 caracteres")
     @Column(length = 100)
     private String complemento;
@@ -83,6 +91,8 @@ public class Paciente {
     @Column(nullable = false, length = 100)
     private String bairro;
 
+
+
     @NotBlank(message = "Estado é obrigatório")
     @Size(min = 2, max = 2, message = "O estado deve conter exatamente 2 caracteres")
     @Column(nullable = false, length = 2)
@@ -96,7 +106,9 @@ public class Paciente {
     @NotNull(message = "Data de nascimento é obrigatória")
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
+    
 
+    
     @NotBlank(message = "Sexo é obrigatório")
     @Size(max = 20, message = "O sexo não pode ter mais de 20 caracteres")
     @Column(nullable = false, length = 20)

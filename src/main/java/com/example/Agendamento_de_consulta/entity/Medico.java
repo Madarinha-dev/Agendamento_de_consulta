@@ -31,6 +31,8 @@ public class Medico {
     @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
+
+
     @NotBlank(message = "Telefone é obrigatório")
     @Size(max = 20, message = "O telefone não pode ter mais de 20 caracteres")
     @Column(nullable = false, length = 20)
@@ -47,6 +49,8 @@ public class Medico {
     @Column(name = "tipo_conselho", nullable = false, length = 10)
     private String tipoConselho;
 
+
+
     @NotBlank(message = "Número do conselho é obrigatório")
     @Size(max = 20, message = "O número do conselho não pode passar de 20 caracteres")
     @Column(name = "numero_conselho", nullable = false, length = 20)
@@ -60,6 +64,8 @@ public class Medico {
     @NotNull(message = "Data de nascimento é obrigatória")
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento; 
+
+    
 
     @Column(name = "key_convenios")
     private String keyConvenios; 
