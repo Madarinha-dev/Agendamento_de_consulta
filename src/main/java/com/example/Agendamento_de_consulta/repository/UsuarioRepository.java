@@ -12,9 +12,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     // BUSCA O USUÁRIO PELO EMAIL, RETORNANDO UM OPCIONAL RETONANDO O USUÁRIO (CASO EXISTA) OU TA VAZIO
     Optional<Usuario> findByEmail(String email);
 
-    // BUSCA O USUÁRIO PELO CPF, retornando true ou false;
+    // BUSCA O USUÁRIO PELO CPF, retornando true ou false, servindo para validações;
     boolean existsByCpf(String cpf);
  
-    // BUSA O USUÁRIO PELO EMAIL, retornando true ou false;
+    // BUSA O USUÁRIO PELO EMAIL, retornando true ou false, servindo para validações;
     boolean existsByEmailIgnoreCase(String email);
 }
