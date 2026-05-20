@@ -8,4 +8,12 @@ import com.example.Agendamento_de_consulta.entity.Paciente;
 @Repository
 public interface PacienteRepository extends JpaRepository<Paciente, Long>{
     
+    // VERIFICAÇÃO DE INTEGRIDADE (RNF02/RNF04): EVITA DUPLICIDADE DE CPF
+    boolean existsByCpf(String cpf);
+
+    // VERIFICAÇÃO DE INTEGRIDADE (RNF02/RNF04): EVITA DUPLICIDADE DE EMAIL
+    boolean existsByEmailIgnoreCase(String email);
+
+    // VERIFICAÇÃO DE INTEGRIDADE (RNF04): EVITA DUPLICIDADE DE CARTÃO NACIONAL DE SAÚDE (SE ENVIADO)
+    boolean existsByCartaoNacionalSaude(String cartaoNacionalSaude);
 }
