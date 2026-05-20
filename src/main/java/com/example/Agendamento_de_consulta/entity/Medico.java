@@ -61,6 +61,7 @@ public class Medico {
     @Column(name = "uf_conselho", nullable = false, length = 2)
     private String ufConselho; //  UF_conselho
 
+    @Past(message = "A data de nascimento deve ser uma data passada.")
     @NotNull(message = "Data de nascimento é obrigatória")
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento; 
