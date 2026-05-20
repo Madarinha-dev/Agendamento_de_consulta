@@ -52,7 +52,7 @@ public class Paciente {
     @Column(length = 20)
     private String rg; 
 
-    @Size(max = 20, message = "O órgão emisso não pode ter mais de 20 caracteres")
+    @Size(max = 20, message = "O órgão emissor não pode ter mais de 20 caracteres")
     @Column(name = "orgao_emissor", length = 20)
     private String orgaoEmissor;
 
@@ -104,6 +104,7 @@ public class Paciente {
     private String cidade;
 
     @NotNull(message = "Data de nascimento é obrigatória")
+    @Past(message = "A data de nascimento deve ser uma data passada")
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
     
