@@ -78,7 +78,7 @@ public class AgendamentoService {
         }
 
         // RNF08: IMPEDIR QUE O MESMO PACIENTE MARQUE DUAS CONSULTAS NO MESMO HORÁRIO.
-        boolean pacienteOcupado = agendamentoRepository.existsByPacienteIdAndDataHoraAgendamentoAndStatusAgendamentosNot(
+        boolean pacienteOcupado = agendamentoRepository.existsByPacienteIdAndDataHoraAgendamentoAndStatusAgendamentoNot(
                 agendamento.getPaciente().getId(),
                 agendamento.getDataHoraAgendamento(),
                 StatusAgendamento.CANCELADO

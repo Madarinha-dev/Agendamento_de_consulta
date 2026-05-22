@@ -29,7 +29,7 @@ public interface AgendamentoRepository extends  JpaRepository<Agendamento, Long>
 
 
     // RNF08: IMPEDIR QUE O MESMO PACIENTE MARQUE DUAS CONSULTAS NO MESMO HORÁRIO
-    boolean existsByPacienteIdAndDataHoraAgendamentoAndStatusAgendamentosNot(
+    boolean existsByPacienteIdAndDataHoraAgendamentoAndStatusAgendamentoNot(
         Long pacienteId,
         LocalDateTime dataHora,
         Agendamento.StatusAgendamento status
