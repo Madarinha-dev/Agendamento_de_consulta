@@ -1,6 +1,7 @@
 package com.example.Agendamento_de_consulta.Controller;
 
-import com.example.Agendamento_de_consulta.entity.Procedimento;
+import com.example.Agendamento_de_consulta.dto.ProcedimentoRequest;
+import com.example.Agendamento_de_consulta.dto.ProcedimentoResponse;
 import com.example.Agendamento_de_consulta.service.ProcedimentoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,25 +19,25 @@ public class ProcedimentoController {
     private final ProcedimentoService procedimentoService;
 
     @GetMapping
-    public ResponseEntity<List<Procedimento>> listarTodos() {
+    public ResponseEntity<List<ProcedimentoResponse>> listarTodos() {
         return ResponseEntity.ok(procedimentoService.listarTodos());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Procedimento> buscarPorId(@PathVariable Long id) {
+    public ResponseEntity<ProcedimentoResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(procedimentoService.buscarPorId(id));
     }
 
     @PostMapping
-    public ResponseEntity<Procedimento> criar(@Valid @RequestBody Procedimento procedimento) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(procedimentoService.salvar(procedimento));
+    public ResponseEntity<ProcedimentoResponse> criar(@Valid @RequestBody ProcedimentoRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(procedimentoService.salvar(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Procedimento> atualizar(
+    public ResponseEntity<ProcedimentoResponse> atualizar(
             @PathVariable Long id,
-            @Valid @RequestBody Procedimento dadosAtualizados) {
-        return ResponseEntity.ok(procedimentoService.atualizar(id, dadosAtualizados));
+            @Valid @RequestBody ProcedimentoRequest request) {
+        return ResponseEntity.ok(procedimentoService.atualizar(id, request));
     }
 
     @DeleteMapping("/{id}")
