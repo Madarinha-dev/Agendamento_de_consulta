@@ -1,5 +1,10 @@
 package com.example.Agendamento_de_consulta.dto;
 
-public class UsuarioResponse {
-    
-}
+public record UsuarioResponse(
+    Long id,
+    String nome,
+    String email,
+    String profissao,
+    String cpf,
+    String permissoesAcesso
+) {}
