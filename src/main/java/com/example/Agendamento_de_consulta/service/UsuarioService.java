@@ -76,6 +76,16 @@ public class UsuarioService {
         Usuario usuarioAtual = usuarioRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Usuário", id));
 
+        // SE O FRONT-END ENVIAR UMA NOVA SENHA, VALIDA E ALTERA
+        if (dadosAtualizados.senha() != null && !dadosAtualizados.senha().isBlank()) {
+            String conf = dadosAtualizados.confirmacaoSenha();
+            if (conf == null || conf.isBlank() || !dadosAtualizados.senha().equals(conf)) {
+                throw new BusinessException("A nova senha e a confirmação não coincidem.");
+            }
+            usuarioAtual.setSenha(dadosAtualizados.senha());
+            usuarioAtual.setConfirmacaoSenha(conf);
+        }
+        
         // VALIDAÇÃO DE DUPLICIDADE SOBRE CPF
         if (!usuarioAtual.getCpf().equals(dadosAtualizados.cpf()) && 
             usuarioRepository.existsByCpf(dadosAtualizados.cpf())) {
@@ -93,15 +103,6 @@ public class UsuarioService {
         usuarioAtual.setEmail(dadosAtualizados.email());
         usuarioAtual.setProfissao(dadosAtualizados.profissao());
         usuarioAtual.setCpf(dadosAtualizados.cpf());
-
-        // SE O FRONT-END ENVIAR UMA NOVA SENHA, VALIDA E ALTERA
-        if (dadosAtualizados.senha() != null && !dadosAtualizados.senha().isBlank()) {
-            if (!dadosAtualizados.senha().equals(dadosAtualizados.confirmacaoSenha())) {
-                throw new BusinessException("A nova senha e a confirmação não coincidem.");
-            }
-            usuarioAtual.setSenha(dadosAtualizados.senha());
-            usuarioAtual.setConfirmacaoSenha(dadosAtualizados.confirmacaoSenha());
-        }
 
         usuarioAtual.setPermissoesAcesso(dadosAtualizados.permissoesAcesso());
         
