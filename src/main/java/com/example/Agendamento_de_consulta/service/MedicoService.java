@@ -4,11 +4,14 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.Agendamento_de_consulta.dto.MedicoRequest;
+import com.example.Agendamento_de_consulta.dto.MedicoResponse;
 import com.example.Agendamento_de_consulta.entity.Especialidade;
 import com.example.Agendamento_de_consulta.entity.Medico;
 import com.example.Agendamento_de_consulta.exception.BusinessException;
 import com.example.Agendamento_de_consulta.exception.ResourceNotFoundException;
 import com.example.Agendamento_de_consulta.repository.MedicoRepository;
+import com.example.Agendamento_de_consulta.repository.EspecialidadeRepository; // INJETADO PARA BUSCAR AS ESPECIALIDADES
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,11 +20,14 @@ import lombok.RequiredArgsConstructor;
 public class MedicoService {
     
     private final MedicoRepository medicoRepository;
+    private final EspecialidadeRepository especialidadeRepository;
 
     // RF04: LISTA TODOS OS MÉDICOS DO SISTEMA
     @Transactional(readOnly = true)
-    public List<Medico> listarTodos() {
-        return medicoRepository.findAll();
+    public List<MedicoResponse> listarTodos() {
+        return medicoRepository.findAll().stream()
+                .map(this::toResponse)
+                .toList();
     }
 
 
@@ -35,68 +41,62 @@ public class MedicoService {
 
     // RF14: BUSCA MÉDICO POR ESPECIALIDADE
     @Transactional(readOnly = true)
-    public List<Medico> buscarPorEspecialidade(Especialidade especialidade) {
-        return medicoRepository.findByEspecialidades(especialidade);
+    public List<MedicoResponse> buscarPorEspecialidade(Especialidade Blacklist_especialidade) {
+        return medicoRepository.findByEspecialidades(Blacklist_especialidade).stream()
+                .map(this::toResponse)
+                .toList();
     }
 
 
     // RF01: CADASTRO DE MÉDICOS COM VALIDAÇÕES RNF02 e RNF04
     @Transactional
-    public Medico salvar(Medico medico) {
+    public MedicoResponse salvar(MedicoRequest request) {
 
-        // Validação de CPF único (RNF02)
-        if (medicoRepository.existsByCpf(medico.getCpf())) {
+        // Validação de CPF
+        if (medicoRepository.existsByCpf(request.cpf())) {
             throw new BusinessException("Já existe um médico cadastrado com este CPF.");
         }
 
-
-        // Validação de E-mail único (RNF02)
-        if (medicoRepository.existsByEmailIgnoreCase(medico.getEmail())) {
+        // Validação de E-mail, ignorando tamanho das letras
+        if (medicoRepository.existsByEmailIgnoreCase(request.email())) {
             throw new BusinessException("Já existe um médico com esse E-mail.");
         }
 
-
-        // Validação de Número do Conselho Único (RNF04)
-        if (medicoRepository.existsByNumeroConselho(medico.getNumeroConselho())) {
+        // Validação de Número do Conselho Único 
+        if (medicoRepository.existsByNumeroConselho(request.numeroConselho())) {
             throw new BusinessException("Já existe um médico cadastrado com este número de conselho.");
         }
 
-        return medicoRepository.save(medico);
+        Medico novoMedico = new Medico();
+        copiarDadosRequestParaEntidade(request, novoMedico);
+
+        Medico medicoSalvo = medicoRepository.save(novoMedico);
+        return toResponse(medicoSalvo);
     }
 
 
     // RF02: EDITAR CADASTRO MÉDICO
     @Transactional
-    public Medico atualizar(Long id, Medico dadosAtualizados) {
+    public MedicoResponse atualizar(Long id, MedicoRequest dadosAtualizados) {
         Medico medicoExistente = buscarPorId(id);
 
         // VALIDAÇÃO PARA NÃO DUPLICAR CPF DE OUTRO MÉDICO;
-        if (!medicoExistente.getCpf().equals(dadosAtualizados.getCpf()) &&
-            medicoRepository.existsByCpf(dadosAtualizados.getCpf())) {
+        if (!medicoExistente.getCpf().equals(dadosAtualizados.cpf()) &&
+            medicoRepository.existsByCpf(dadosAtualizados.cpf())) {
             throw new BusinessException("O CPF informado já está em uso por outro médico.");
         }
 
-
         // VALIDAÇÃO PARA NÃO DUPLICAR E-MAIL DE OUTRO MÉDICO;
-        if (!medicoExistente.getEmail().equals(dadosAtualizados.getEmail()) &&
-            medicoRepository.existsByEmailIgnoreCase(dadosAtualizados.getEmail())) {
+        if (!medicoExistente.getEmail().equals(dadosAtualizados.email()) &&
+            medicoRepository.existsByEmailIgnoreCase(dadosAtualizados.email())) {
             throw new BusinessException("O E-mail informado já está em uso por outro médico.");
         }
 
-        // ATUALIZA OS DADOS DO MÉDICO
-        medicoExistente.setNome(dadosAtualizados.getNome());
-        medicoExistente.setCpf(dadosAtualizados.getCpf());
-        medicoExistente.setTelefone(dadosAtualizados.getTelefone());
-        medicoExistente.setEmail(dadosAtualizados.getEmail());
-        medicoExistente.setTipoConselho(dadosAtualizados.getTipoConselho());
-        medicoExistente.setNumeroConselho(dadosAtualizados.getNumeroConselho());
-        medicoExistente.setUfConselho(dadosAtualizados.getUfConselho());
-        medicoExistente.setDataNascimento(dadosAtualizados.getDataNascimento());
-        medicoExistente.setKeyConvenios(dadosAtualizados.getKeyConvenios());
+        // ATUALIZA OS DADOS
+        copiarDadosRequestParaEntidade(dadosAtualizados, medicoExistente);
 
-        // RF13: ASSOCIAR A ESPECIALIDADE AO CADASTRO DO MÉDICO
-        medicoExistente.setEspecialidades(dadosAtualizados.getEspecialidades());
-        return medicoRepository.save(medicoExistente);
+        Medico medicoAtualizado = medicoRepository.save(medicoExistente);
+        return toResponse(medicoAtualizado);
     }
 
 
@@ -107,5 +107,46 @@ public class MedicoService {
             throw new ResourceNotFoundException("Médico", id);
         }
         medicoRepository.deleteById(id);
+    }
+
+    private void copiarDadosRequestParaEntidade(MedicoRequest request, Medico entidade) {
+        entidade.setNome(request.nome());
+        entidade.setCpf(request.cpf());
+        entidade.setTelefone(request.telefone());
+        entidade.setEmail(request.email());
+        entidade.setTipoConselho(request.tipoConselho());
+        entidade.setNumeroConselho(request.numeroConselho());
+        entidade.setUfConselho(request.ufConselho());
+        entidade.setDataNascimento(request.dataNascimento());
+        entidade.setKeyConvenios(request.keyConvenios());
+
+        // Busca as especialidades no banco de dados através dos IDs informados no DTO
+        List<Especialidade> especialidadesDoBanco = request.especialidadesIds().stream()
+                .map(id -> especialidadeRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Especialidade", id)))
+                .toList();
+
+        entidade.setEspecialidades(especialidadesDoBanco);
+    }
+
+    private MedicoResponse toResponse(Medico entity) {
+        // Converte a lista de entidades Especialidade em sub-records EspecialidadeExibicaoDTO
+        List<MedicoResponse.EspecialidadeExibicaoDTO> especialidadesDto = entity.getEspecialidades().stream()
+                .map(e -> new MedicoResponse.EspecialidadeExibicaoDTO(e.getId(), e.getNome(), e.getCodigoCbo()))
+                .toList();
+
+        return new MedicoResponse(
+                entity.getId(),
+                entity.getNome(),
+                entity.getCpf(),
+                entity.getTelefone(),
+                entity.getEmail(),
+                entity.getTipoConselho(),
+                entity.getNumeroConselho(),
+                entity.getUfConselho(),
+                entity.getDataNascimento(),
+                entity.getKeyConvenios(),
+                especialidadesDto
+        );
     }
 }
