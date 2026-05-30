@@ -26,6 +26,7 @@ public class Especialidade {
 
     @NotBlank(message = "O código CBO é obrigatório")
     @Size(max = 20, message = "O código CBO não pode ter mais de 20 caracteres.")
+    @Pattern(regexp = "^[0-9]{6}$", message = "O código CBO deve conter exatamente 6 números (ex: 225120).")
     @Column(name = "codigo_cbo", nullable = false, length = 20)
     private String codigoCbo;
 }
