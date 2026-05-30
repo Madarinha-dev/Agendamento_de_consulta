@@ -11,10 +11,12 @@ public record MedicoRequest (
 
     @NotBlank(message = "CPF é obrigatório")
     @Size(min = 11, max = 14, message = "O CPF deve ter entre 11 e 14 caracteres")
+    @Pattern(regexp = "^[0-9]+$", message = "O CPF deve conter apenas números")
     String cpf,
 
     @NotBlank(message = "Telefone é obrigatório")
     @Size(max = 20, message = "O telefone não pode ter mais de 20 caracteres")
+    @Pattern(regexp = "^[0-9]+$", message = "O telefone deve conter apenas números")
     String telefone,
 
     @NotBlank(message = "Email é obrigatório")
@@ -28,6 +30,7 @@ public record MedicoRequest (
 
     @NotBlank(message = "Número do conselho é obrigatório")
     @Size(max = 20, message = "O número do conselho não pode passar de 20 caracteres")
+    @Pattern(regexp = "^[0-9]+$", message = "O número do conselho deve conter apenas números")
     String numeroConselho,
 
     @NotBlank(message = "UF do conselho é obrigatório")
