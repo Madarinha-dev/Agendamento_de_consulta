@@ -78,7 +78,15 @@ public class MedicoService {
     // RF02: EDITAR CADASTRO MÉDICO
     @Transactional
     public MedicoResponse atualizar(Long id, MedicoRequest dadosAtualizados) {
+
         Medico medicoExistente = buscarPorId(id);
+
+        // VALIDAÇÃO PARA NÃO DUPLICAR NÚMERO DO CONSELHO DE OUTRO MÉDICO
+        if (!medicoExistente.getNumeroConselho().equals(dadosAtualizados.numeroConselho()) &&
+            medicoRepository.existsByNumeroConselho(dadosAtualizados.numeroConselho())) {
+            throw new BusinessException("O número de conselho informado já está em uso por outro médico.");
+        }
+
 
         // VALIDAÇÃO PARA NÃO DUPLICAR CPF DE OUTRO MÉDICO;
         if (!medicoExistente.getCpf().equals(dadosAtualizados.cpf()) &&
@@ -91,12 +99,19 @@ public class MedicoService {
             medicoRepository.existsByEmailIgnoreCase(dadosAtualizados.email())) {
             throw new BusinessException("O E-mail informado já está em uso por outro médico.");
         }
+        
 
         // ATUALIZA OS DADOS
-        copiarDadosRequestParaEntidade(dadosAtualizados, medicoExistente);
+        try {
+            copiarDadosRequestParaEntidade(dadosAtualizados, medicoExistente);
+            Medico medicoAtualizado = medicoRepository.saveAndFlush(medicoExistente);
+        
+            MedicoResponse response = toResponse(medicoAtualizado);
+            return response;
 
-        Medico medicoAtualizado = medicoRepository.save(medicoExistente);
-        return toResponse(medicoAtualizado);
+        } catch (org.springframework.dao.DataIntegrityViolationException ex) {
+            throw new BusinessException("Erro de integridade dos dados ao atualizar o médico. Verifique o tamanho ou duplicidade dos campos.");
+        } 
     }
 
 
@@ -121,12 +136,16 @@ public class MedicoService {
         entidade.setKeyConvenios(request.keyConvenios());
 
         // Busca as especialidades no banco de dados através dos IDs informados no DTO
+
+        // nesse método de atualizar, o método que retornava a lista era o ".toList()",
+        // essa lista ela é imutável, ai para corrigir o bug, foi necessário trocar para o ".collect()", que retorna
+        // uma lista mutável, possibilitando a edição dos dados de especialidade do médico;
         List<Especialidade> especialidadesDoBanco = request.especialidadesIds().stream()
                 .map(id -> especialidadeRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Especialidade", id)))
-                .toList();
-
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
         entidade.setEspecialidades(especialidadesDoBanco);
+
     }
 
     private MedicoResponse toResponse(Medico entity) {
