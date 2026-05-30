@@ -1,5 +1,7 @@
 package com.example.Agendamento_de_consulta.dto;
 
-public class EspecialidadeResponse {
-    
-}
+public record EspecialidadeResponse(
+    Long id,
+    String nome,
+    String codigoCbo
+) {}
