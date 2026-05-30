@@ -18,21 +18,28 @@ public class ProcedimentoController {
 
     private final ProcedimentoService procedimentoService;
 
+    // [ GET ] - LISTA TODOS OS PROCEDIMENTOS CADASTRADOS (RETORNA 200)
     @GetMapping
     public ResponseEntity<List<ProcedimentoResponse>> listarTodos() {
         return ResponseEntity.ok(procedimentoService.listarTodos());
     }
 
+
+    // [ GET ] - BUSCA PROCEDIMENTO POR ID (RETORNA 200 OU 404)
     @GetMapping("/{id}")
     public ResponseEntity<ProcedimentoResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(procedimentoService.buscarPorId(id));
     }
 
+
+    // [ POST ] - CADASTRO DE NOVO PROCEDIMENTO COM VALIDAÇÃO (RETORNA 201)
     @PostMapping
     public ResponseEntity<ProcedimentoResponse> criar(@Valid @RequestBody ProcedimentoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(procedimentoService.salvar(request));
     }
 
+    
+    // [ PUT ] - ATUALIZA DADOS DE UM PROCEDIMENTO EXISTENTE (RETORNA 200)
     @PutMapping("/{id}")
     public ResponseEntity<ProcedimentoResponse> atualizar(
             @PathVariable Long id,
@@ -40,6 +47,8 @@ public class ProcedimentoController {
         return ResponseEntity.ok(procedimentoService.atualizar(id, request));
     }
 
+
+    // [ DELETE ] - EXCLUI PROCEDIMENTO DO SISTEMA (RETORNA 204)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         procedimentoService.deletar(id);

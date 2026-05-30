@@ -18,21 +18,28 @@ public class PacienteController {
 
     private final PacienteService pacienteService;
 
+    // [ GET ] - LISTA TODOS OS PACIENTES CADASTRADOS (RETORNA 200)
     @GetMapping
     public ResponseEntity<List<PacienteResponse>> listarTodos() {
         return ResponseEntity.ok(pacienteService.listarTodos());
     }
 
+
+    // [ GET ] - BUSCA PACIENTE POR ID (RETORNA 200 OU 404)
     @GetMapping("/{id}")
     public ResponseEntity<PacienteResponse> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(pacienteService.buscarPorId(id));
     }
 
+
+    // [ POST ] - CADASTRO DE NOVO PACIENTE (RETORNA 201)
     @PostMapping
     public ResponseEntity<PacienteResponse> criar(@Valid @RequestBody PacienteRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(pacienteService.salvar(request));
     }
 
+
+    // [ PUT ] - ATUALIZA DADOS DE UM PACIENTE EXISTENTE (RETORNA 200)
     @PutMapping("/{id}")
     public ResponseEntity<PacienteResponse> atualizar(
             @PathVariable Long id,
@@ -40,6 +47,8 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.atualizar(id, dadosAtualizados));
     }
 
+
+    // [ DELETE ] - EXCLUI PACIENTE DO SISTEMA (RETORNA 204)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
         pacienteService.deletar(id);

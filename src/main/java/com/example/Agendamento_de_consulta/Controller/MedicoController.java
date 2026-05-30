@@ -19,12 +19,14 @@ public class MedicoController {
 
     private final MedicoService medicoService;
 
+    // [ GET ] - LISTAR TODOS OS MÉDICOS CADASTRADOS
     @GetMapping
     public ResponseEntity<List<MedicoResponse>> listarTodos() {
         return ResponseEntity.ok(medicoService.listarTodos());
     }
 
-    // me explique melhor esse trecho aqui, o service vai permanecer na versão atual
+    
+    // [ GET ] - BUSCA MÉDICO POR ID (RETORNA 200 OU 404)
     @GetMapping("/{id}")
     public ResponseEntity<MedicoResponse> buscarPorId(@PathVariable Long id) {
         // Buscamos a entidade no service e convertemos para Response para manter o contrato da API
@@ -48,6 +50,7 @@ public class MedicoController {
     }
 
 
+    // [ GET ] - FILTRA MÉDICOS POR ID DA ESPECIALIDADE
     @GetMapping("/especialidade")
     public ResponseEntity<List<MedicoResponse>> buscarPorEspecialidade(@RequestParam Long Blacklist_especialidadeId) {
         Especialidade Blacklist_especialidade = new Especialidade();
@@ -56,12 +59,14 @@ public class MedicoController {
     }
 
     
+    // [ POST ] - CADASTRO DE NOVO MÉDICO COM VALIDAÇÃO (RETORNA 201)
     @PostMapping
     public ResponseEntity<MedicoResponse> criar(@Valid @RequestBody MedicoRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(medicoService.salvar(request));
     }
 
     
+    // [ PUT ] - ATUALIZA DADOS DE UM MÉDICO EXISTENTE (RETORNA 200)
     @PutMapping("/{id}")
     public ResponseEntity<MedicoResponse> atualizar(
             @PathVariable Long id,
@@ -70,6 +75,7 @@ public class MedicoController {
     }
 
     
+    // [ DELETE ] - EXCLUI MÉDICO DO SISTEMA (RETORNA 204)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Long id) {
         medicoService.excluir(id);
