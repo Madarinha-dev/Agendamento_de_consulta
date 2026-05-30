@@ -28,6 +28,7 @@ class AgendamentoRepositoryTest {
     @Test
     @DisplayName("Cenário 1: Deve encontrar um agendamento por ID com sucesso")
     void findByIdSuccess() {
+        
         // 1. Criar e preencher Médico
         Medico medico = new Medico();
         medico.setNome("Dr. Rodrigo");
@@ -61,11 +62,9 @@ class AgendamentoRepositoryTest {
         agendamento.setMedico(medico);
         agendamento.setPaciente(paciente);
         
-        // CORREÇÃO 1: Definir datas bem no futuro para passar no validador @Future
         agendamento.setDataHoraAgendamento(LocalDateTime.now().plusDays(5));
         agendamento.setDataHoraAgendaMedico(LocalDateTime.now().plusDays(5).plusHours(1));
         
-        // CORREÇÃO 2: Definir o status obrigatório usando o Enum do seu projeto
         agendamento.setStatusAgendamento(StatusAgendamento.AGENDADO);
 
         // 4. Persistir o agendamento completo
