@@ -32,11 +32,13 @@ public class Paciente {
 
     @NotBlank(message = "CPF é obrigatório")
     @Size(min = 11, max = 14, message = "O CPF deve ter entre 11 e 14 caracteres")
+    @Pattern(regexp = "^[0-9]+$", message = "O CPF deve conter apenas números")
     @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
     @NotBlank(message = "Telefone é obrigatório")
     @Size(max = 20, message = "O telefone não pode ter mais de 20 caracteres")
+    @Pattern(regexp = "^[0-9]+$", message = "O telefone deve conter apenas números")
     @Column(nullable = false, length = 20)
     private String telefone;
 
@@ -67,6 +69,7 @@ public class Paciente {
 
     @NotBlank(message = "CEP é obrigatório")
     @Size(min = 8, max = 9, message = "O CEP deve ter entre 8 e 9 caracteres")
+    @Pattern(regexp = "^[0-9]+$", message = "O CEP deve conter apenas números")
     @Column(nullable = false, length = 9)
     private String cep;
 
@@ -120,6 +123,7 @@ public class Paciente {
     private String estadoCivil;
 
     @Size(max = 20, message = "O Cartão Nacional de Saúde não pode ter mais de 20 caracteres")
+    @Pattern(regexp = "^[0-9]*$", message = "O Cartão Nacional de Saúde deve conter apenas números")
     @Column(name = "cartao_nacional_saude", length = 20)
     private String cartaoNacionalSaude;
 
