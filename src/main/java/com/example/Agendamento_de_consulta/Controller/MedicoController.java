@@ -1,4 +1,4 @@
-package com.example.Agendamento_de_consulta.controller;
+package com.example.Agendamento_de_consulta.Controller;
 
 import java.util.List;
 
