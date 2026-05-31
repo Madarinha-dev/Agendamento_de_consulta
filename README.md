@@ -205,3 +205,8 @@ src/
             ├── exception/        # Exceções customizadas
             └── config/           # Configurações (Swagger)
 ```
+
+## Autores
+- [Fhellype Vinicius de Paula]([https://github.com/seu-usuario](https://github.com/Madarinha-dev))
+- [Julio Cesar S. de Assis]([https://github.com/usuario2](https://github.com/JuliioCesar))
+- [Randerson Barros de Albuquerque]([https://github.com/usuario3](https://github.com/Randersonbarros))
