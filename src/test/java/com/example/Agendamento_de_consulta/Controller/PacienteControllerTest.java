@@ -1,4 +1,4 @@
-package com.example.Agendamento_de_consulta.Controller;
+package com.example.Agendamento_de_consulta.controller;
 
 public class PacienteControllerTest {
     
